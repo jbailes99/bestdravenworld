@@ -19,9 +19,6 @@ export const MatchDataProvider = ({ children }) => {
   const [totalSkillshotsDodged, setTotalSkillShotsDodged] = useState(0)
   const [averageKillParticipation, setAverageKillParticipation] = useState(0) // New state for average KP
 
-  const summonerId = 'ddERbga-7B0qbSpQUo_Biz8KjK4eb4EnfrVZssaKMq7o6Ef5'
-  const puuid = 'Vi97LlByVxO0yexpdVJSW1ChAjUwd7r8CW1OcZnFSsyZMbJV88TRaovyWrWSP1uesGx6pTTXQhArAQ'
-
   //set game name, tagline, and target champion to track
 
   const GAME_NAME = 'DAGESTAN WARRIOR'
@@ -53,33 +50,41 @@ export const MatchDataProvider = ({ children }) => {
 
   useEffect(() => {
     const fetchAccountId = async () => {
-      try {
-        const response = await fetch(`${backendUrl}/api/account/id/${account.puuid}`)
-        const data = await response.json()
-        console.log(data)
-        setAccountId(data)
-      } catch (error) {
-        console.error('Error fetching data:', error)
+      if (account?.puuid) {
+        try {
+          const response = await fetch(`${backendUrl}/api/poop/id/${account.puuid}`)
+          const data = await response.json()
+          console.log('accpimt id', data)
+          setAccountId(data)
+        } catch (error) {
+          console.error('Error fetching data:', error)
+        }
       }
     }
 
     fetchAccountId()
-  }, [])
+  }, [account])
 
   useEffect(() => {
     const fetchAccountRank = async () => {
       try {
-        const response = await fetch(`${backendUrl}/api/league/${accountId.id}`)
-        const data = await response.json()
+        if (accountId?.id) {
+          console.log('Fetching rank for accountId:', accountId.id)
+          const response = await fetch(`${backendUrl}/api/league/${accountId.id}`)
+          const data = await response.json()
+          console.log('Rank data:', data)
 
-        setAccountRank(data[0])
-        console.log('rank data:', accountRank.rank)
+          setAccountRank(data[0]) // Set the first rank data
+        }
       } catch (error) {
-        console.error('Error fetching data:', error)
+        console.error('Error fetching account rank:', error)
       }
     }
-    fetchAccountRank()
-  }, [])
+
+    fetchAccountRank() // Call the function here, outside its own definition
+  }, [accountId]) // This effect now depends on `accountId`
+
+  // Separate useEffect to log accountRank after it's been updated
 
   useEffect(() => {
     const fetchMatchHistory = async () => {
