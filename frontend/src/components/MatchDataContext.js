@@ -24,8 +24,8 @@ export const MatchDataProvider = ({ children }) => {
 
   //set game name, tagline, and target champion to track
 
-  const GAME_NAME = 'elbmuTq'
-  const TAG_LINE = 'FUN'
+  const GAME_NAME = 'DAGESTAN WARRIOR'
+  const TAG_LINE = 'NA1'
   const TARGET_CHAMPION_NAME = 'Vayne'
   const region = 'na'
 
