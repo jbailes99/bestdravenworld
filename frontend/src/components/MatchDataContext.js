@@ -13,6 +13,8 @@ export const MatchDataProvider = ({ children }) => {
 
   const [lastDravenWin, setLastDravenWin] = useState(null)
   const [loading, setLoading] = useState(true)
+  const [loadingProgressBar, setLoadingProgressBar] = useState(true)
+
   const [error, setError] = useState(null)
   const [error429, setError429] = useState(null)
 
@@ -75,6 +77,7 @@ export const MatchDataProvider = ({ children }) => {
           console.log('Rank data:', data)
 
           setAccountRank(data[0]) // Set the first rank data
+          setLoadingProgressBar(false)
         }
       } catch (error) {
         console.error('Error fetching account rank:', error)
@@ -194,6 +197,7 @@ export const MatchDataProvider = ({ children }) => {
         averageKDA,
         totalSkillshotsDodged,
         loading,
+        loadingProgressBar,
         error,
         averageKillParticipation,
         totalAssistPings,

@@ -33,7 +33,7 @@ app.get('/api/matches/:puuid', async (req, res) => {
   const { puuid } = req.params
   try {
     const response = await fetch(
-      `https://americas.api.riotgames.com/lol/match/v5/matches/by-puuid/${puuid}/ids?start=0&count=10&api_key=${apiKey}`
+      `https://americas.api.riotgames.com/lol/match/v5/matches/by-puuid/${puuid}/ids?start=0&count=5&api_key=${apiKey}`
     )
     if (response.ok) {
       const data = await response.json()

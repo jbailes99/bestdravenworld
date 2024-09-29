@@ -15,12 +15,10 @@ const Home = () => {
   const {
     error429,
     TARGET_CHAMPION_NAME,
-    GAME_NAME,
-    TAG_LINE,
+    loadingProgressBar,
     account,
     lastDravenWin,
     loading,
-    error,
     averageKDA,
     totalSkillshotsDodged,
     averageKillParticipation,
@@ -80,16 +78,18 @@ const Home = () => {
     III: 2,
     IV: 1,
   }
+  let progressPercentage = 0
+  if (accountRank) {
+    const currentRankNumeric = romanToNumeric[accountRank.rank] || 0
+    const currentRankLP = rankLPThresholds[accountRank.tier]
+      ? rankLPThresholds[accountRank.tier] + currentRankNumeric * divisionLP + accountRank.leaguePoints
+      : NaN
+    console.log(currentRankLP)
 
-  const currentRankNumeric = romanToNumeric[accountRank.rank] || 0
-  const currentRankLP = rankLPThresholds[accountRank.tier]
-    ? rankLPThresholds[accountRank.tier] + currentRankNumeric * divisionLP + accountRank.leaguePoints
-    : NaN
-  console.log(currentRankLP)
-
-  const currentProgressLP = currentRankLP - rankLPThresholds['IRON']
-  const progressPercentage = Math.min((currentProgressLP / totalLPForProgress) * 100, 100)
-  console.log(progressPercentage)
+    const currentProgressLP = currentRankLP - rankLPThresholds['IRON']
+    const progressPercentage = Math.min((currentProgressLP / totalLPForProgress) * 100, 100)
+    console.log(progressPercentage)
+  }
 
   return (
     <div className='sm:m-8 m-4 sm:rounded-xl rounded-xl sm:p-0 p-4 justify-center text-center  bg-gray-900 text-white'>
@@ -119,7 +119,7 @@ const Home = () => {
         </div>
       ) : (
         <div className='flex flex-col items-center p-6 rounded-lg'>
-          {accountRank.tier ? (
+          {!accountRank === 0 ? (
             <div className='flex space-x-24 sm:mb-0 mb-4'>
               <div>
                 <div className='flex flex-col sm:flex-row items-center'>
@@ -156,7 +156,12 @@ const Home = () => {
               </div>
             </div>
           )}
-          {accountRank.tier ? (
+          {loading ? (
+            <div className='text-center text-lg font-semibold text-gray-800'>
+              {' '}
+              <Bars color='white' height={18} width={18} />
+            </div>
+          ) : !accountRank === 0 ? (
             <div className='relative w-full bg-gray-700 h-4 rounded-full mt-4 mb-4'>
               <div
                 className='bg-green-500 h-full rounded-full'
@@ -170,9 +175,21 @@ const Home = () => {
               </div>
             </div>
           ) : (
-            <div className='mt-2 mb-2'>
+            <div className='w-full mt-2'>
               {' '}
-              <Bars color='white' height={18} width={18} />
+              <h1 className='text-sm font-semibold text-red-300'>not ranked yet..</h1>
+              <div className='relative w-full bg-gray-700 h-4 rounded-full mt-4 mb-4'>
+                <div
+                  className='bg-green-500 h-full rounded-full'
+                  style={{ width: '0%' }} // No progress filled
+                ></div>
+                <div
+                  className='absolute top-[-24px] right-0 text-white font-semibold'
+                  style={{ right: '100%', transform: 'translateX(50%)' }} // Text shows 0%
+                >
+                  0%
+                </div>
+              </div>
             </div>
           )}
           <div className='max-w-2xl w-full'>
