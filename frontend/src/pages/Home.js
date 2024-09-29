@@ -156,7 +156,7 @@ const Home = () => {
               </div>
             </div>
           )}
-          {loading ? (
+          {loadingProgressBar ? (
             <div className='text-center text-lg font-semibold text-gray-800'>
               {' '}
               <Bars color='white' height={18} width={18} />
