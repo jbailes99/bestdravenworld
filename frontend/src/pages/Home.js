@@ -89,7 +89,7 @@ const Home = () => {
 
     const currentProgressLP = currentRankLP - rankLPThresholds['IRON']
     const progressPercentage = Math.min((currentProgressLP / totalLPForProgress) * 100, 100)
-    console.log(progressPercentage)
+    console.log(accountRank)
   }
 
   return (
@@ -118,9 +118,20 @@ const Home = () => {
         <div className='p-12 text-2xl text-red-200 font-semibold'>
           the api is working double time rn. slow down bro. try again in a few sec
         </div>
+      ) : loading ? (
+        <div className='p-4'>
+          <div className='flex justify-center mt-4 mb-4 items-center mx-auto'>
+            <Bars color='white' height={32} width={32} />
+          </div>
+        </div>
       ) : (
         <div className='flex flex-col items-center p-6 rounded-lg'>
-          {!accountRank === 0 ? (
+          {loading ? (
+            <div>
+              {' '}
+              <Bars color='white' height={32} width={32} />
+            </div>
+          ) : accountRank ? (
             <div className='flex space-x-24 sm:mb-0 mb-4'>
               <div>
                 <div className='flex flex-col sm:flex-row items-center'>
@@ -162,7 +173,7 @@ const Home = () => {
               {' '}
               <Bars color='white' height={18} width={18} />
             </div>
-          ) : accountRank > 0 ? (
+          ) : accountRank ? (
             <div className='relative w-full bg-gray-700 h-4 rounded-full mt-4 mb-4'>
               <div
                 className='bg-green-500 h-full rounded-full'
