@@ -9,10 +9,10 @@ const PORT = process.env.PORT || 5000
 app.use(cors())
 
 //europe, americas, asia
-const v5region = 'europe'
+const v5region = 'americas'
 
 //na1, euw1, eun1, br1, kr, etc..
-const v4region = 'euw1'
+const v4region = 'na1'
 
 const apiKey = process.env.API_KEY // Use environment variable
 
