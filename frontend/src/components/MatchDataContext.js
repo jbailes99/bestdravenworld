@@ -19,7 +19,8 @@ export const MatchDataProvider = ({ children }) => {
   const [error429, setError429] = useState(null)
 
   const [totalSkillshotsDodged, setTotalSkillShotsDodged] = useState(0)
-  const [averageKillParticipation, setAverageKillParticipation] = useState(0) // New state for average KP
+  const [averageKillParticipation, setAverageKillParticipation] = useState(0)
+  const [winrate, setWinrate] = useState(0)
 
   //set game name, tagline, and target champion to track
 
@@ -77,6 +78,15 @@ export const MatchDataProvider = ({ children }) => {
           console.log('Rank data:', data)
 
           setAccountRank(data[0]) // Set the first rank data
+
+          // Calculate winrate from rank data
+          if (data[0]) {
+            const { wins, losses } = data[0]
+            const totalGames = wins + losses
+            const winratePercentage = totalGames > 0 ? (wins / totalGames) * 100 : 0
+            setWinrate(winratePercentage.toFixed(1))
+          }
+
           setLoadingProgressBar(false)
         }
       } catch (error) {
@@ -84,8 +94,8 @@ export const MatchDataProvider = ({ children }) => {
       }
     }
 
-    fetchAccountRank() // Call the function here, outside its own definition
-  }, [accountId]) // This effect now depends on `accountId`
+    fetchAccountRank()
+  }, [accountId])
 
   // Separate useEffect to log accountRank after it's been updated
   const filteredMatches = 0
@@ -127,7 +137,7 @@ export const MatchDataProvider = ({ children }) => {
             return team?.win // Find the first match that was a win
           })
 
-          // Calculate average K/D/A
+          // Calculate average K/D/A and winrate
           const totalStats = filteredMatches.reduce(
             (acc, match) => {
               const participant = match.info.participants.find(p => p.puuid === account.puuid)
@@ -140,10 +150,11 @@ export const MatchDataProvider = ({ children }) => {
                 acc.totalKP += participant.challenges?.killParticipation || 0
                 acc.totalAssistPings += participant.assistMePings
                 acc.totalAllIn += participant.onMyWayPings
+                acc.totalWins += team?.win ? 1 : 0
 
                 // skillshot counter
                 const skillShotsDodged = participant.challenges?.skillshotsDodged || 0
-                acc.totalSkillShotsDodged += skillShotsDodged // Sum skillshotsDodged
+                acc.totalSkillShotsDodged += skillShotsDodged
 
                 acc.matchCount += 1
               }
@@ -153,10 +164,11 @@ export const MatchDataProvider = ({ children }) => {
               totalKills: 0,
               totalDeaths: 0,
               totalAssists: 0,
-              totalSkillShotsDodged: 0, // Initialize this to 0
+              totalSkillShotsDodged: 0,
               totalKP: 0,
               totalAllIn: 0,
               totalAssistPings: 0,
+              totalWins: 0,
               matchCount: 0,
             }
           )
@@ -165,18 +177,17 @@ export const MatchDataProvider = ({ children }) => {
             totalStats.matchCount > 0 ? (totalStats.totalKills + totalStats.totalAssists) / totalStats.totalDeaths : 0
 
           const avgKillParticipation =
-            totalStats.matchCount > 0
-              ? (totalStats.totalKP / totalStats.matchCount) * 100 // Convert to percentage and round to the nearest whole number
-              : 0
+            totalStats.matchCount > 0 ? (totalStats.totalKP / totalStats.matchCount) * 100 : 0
 
           console.log('avg KDA:', avgKDA)
           console.log('avgkp:', avgKillParticipation)
+          console.log('winrate:', winrate)
 
           setMatches(filteredMatches)
           setAverageKDA(avgKDA.toFixed(2))
           setLastDravenWin(lastWin || null)
-          setTotalSkillShotsDodged(totalStats.totalSkillShotsDodged) // Set the total skillshots dodged
-          setAverageKillParticipation(avgKillParticipation.toFixed(2)) // Set average KP
+          setTotalSkillShotsDodged(totalStats.totalSkillShotsDodged)
+          setAverageKillParticipation(avgKillParticipation.toFixed(2))
           setTotalAssistPings(totalStats.totalAssistPings)
           setTotalAllInPings(totalStats.totalAllIn)
           setLoading(false)
@@ -211,6 +222,7 @@ export const MatchDataProvider = ({ children }) => {
         totalAssistPings,
         totalAllInPings,
         accountRank,
+        winrate,
       }}
     >
       {children}

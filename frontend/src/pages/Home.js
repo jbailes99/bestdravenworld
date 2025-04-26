@@ -26,6 +26,7 @@ const Home = () => {
     totalAssistPings,
     totalAllInPings,
     accountRank,
+    winrate,
   } = useContext(MatchDataContext)
 
   //set goal rank
@@ -173,34 +174,14 @@ const Home = () => {
               {' '}
               <Bars color='white' height={18} width={18} />
             </div>
-          ) : accountRank ? (
-            <div className='relative w-full bg-gray-700 h-4 rounded-full mt-4 mb-4'>
-              <div
-                className='bg-green-500 h-full rounded-full'
-                style={{ width: `${accountRank ? progressPercentage : 0}%` }}
-              ></div>
-              <div
-                className='absolute top-[-24px] right-0 text-white font-semibold'
-                style={{ right: `${100 - (accountRank ? progressPercentage : 0)}%`, transform: 'translateX(50%)' }}
-              >
-                {accountRank ? Math.round(progressPercentage) : 0}%
-              </div>
-            </div>
           ) : (
-            <div className='w-full mt-2'>
-              {' '}
-              <h1 className='text-sm font-semibold text-red-300'>not ranked yet..</h1>
-              <div className='relative w-full bg-gray-700 h-4 rounded-full mt-4 mb-4'>
-                <div
-                  className='bg-green-500 h-full rounded-full'
-                  style={{ width: '0%' }} // No progress filled
-                ></div>
-                <div
-                  className='absolute top-[-24px] right-0 text-white font-semibold'
-                  style={{ right: '100%', transform: 'translateX(50%)' }} // Text shows 0%
-                >
-                  0%
-                </div>
+            <div className='progress-bar-container mt-4 mb-4'>
+              <div
+                className='progress-bar-fill'
+                style={{ '--progress-width': `${accountRank ? progressPercentage : 0}%` }}
+              ></div>
+              <div className='progress-bar-text' style={{ right: `${100 - (accountRank ? progressPercentage : 0)}%` }}>
+                {accountRank ? Math.round(progressPercentage) : 0}%
               </div>
             </div>
           )}
@@ -270,6 +251,7 @@ const Home = () => {
               <div className='flex flex-col md:flex-row space-y-8 md:space-y-0 md:space-x-8 w-full md:w-3/4'>
                 {[
                   { title: 'Avg KDA', value: averageKDA },
+                  { title: 'Winrate', value: winrate ? winrate + '%' : null },
                   { title: 'Skillshots Dodged', value: totalSkillshotsDodged },
                   {
                     title: 'Average KP',
